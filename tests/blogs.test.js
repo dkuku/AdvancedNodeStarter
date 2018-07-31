@@ -12,7 +12,7 @@ afterEach(async ()=>{
 });
 
 describe('While not logged in', async ()=>{
-    const actions: [
+    const actions = [
         {
             method: 'get',
             path: '/api/blogs'
@@ -27,14 +27,11 @@ describe('While not logged in', async ()=>{
         },
 
     ]
-    test('can not create posts by making a post request', async ()=>{
-        const result = await page.post('/api/blogs', {title: 'Title', content: '123'})
-        expect(result).toEqual({ error: 'You must log in!' });
-    });
-
-    test('can not retrieve any posts by making a get request', async ()=>{
-        const result = await page.get('/api/blogs');
-        expect(result).toEqual({ error: 'You must log in!' });
+    test('Blog related actions are prohibited',async ()=>{
+        const results = await page.execRequests(actions);
+        for (let result of results){
+            expect(result).toEqual({ error: 'You must log in!' });
+        }
     });
 });
 
